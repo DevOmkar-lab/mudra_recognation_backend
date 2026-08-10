@@ -1,0 +1,1 @@
+"""Mudra recognition package."""

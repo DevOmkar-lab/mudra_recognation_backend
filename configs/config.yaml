@@ -1,0 +1,64 @@
+project:
+  name: mudra-recognition
+  seed: 42
+
+dataset:
+  raw_dir: dataset/raw
+  processed_dir: dataset/processed
+  train_dir: dataset/splits/train
+  validation_dir: dataset/splits/validation
+  test_dir: dataset/splits/test
+  train_ratio: 0.8
+  validation_ratio: 0.1
+  test_ratio: 0.1
+  group_by: recording_id
+
+hand:
+  model_path: models/hand_landmarker/hand_landmarker.task
+  max_num_hands: 1
+  min_hand_detection_confidence: 0.5
+  min_hand_presence_confidence: 0.5
+  min_tracking_confidence: 0.5
+  running_mode: VIDEO
+  auto_download_model: true
+
+camera:
+  # OBS Virtual Camera is commonly index 1; change if Windows assigns another index.
+  source: 1
+  width: 1280
+  height: 720
+  fps: 60
+  flip_horizontal: false
+  rotation: 0
+
+features:
+  use_xyz: true
+  use_angles: false
+  use_distances: false
+
+training:
+  batch_size: 32
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  dropout: 0.3
+  early_stopping_patience: 15
+  num_workers: 0
+  scheduler_patience: 5
+  scheduler_factor: 0.5
+
+model:
+  input_size: 63
+  hidden_sizes: [128, 64]
+
+export:
+  onnx_path: models/exported/mudra_model.onnx
+  labels_path: models/exported/labels.json
+
+api:
+  # Add your frontend URL here instead of allowing every browser origin.
+  allowed_origins: ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173", "http://127.0.0.1:5173"]
+  max_image_bytes: 5000000
+  max_image_pixels: 16000000
+  minimum_confidence: 0.60
+  onnx_intra_op_threads: 1
